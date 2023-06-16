@@ -18,5 +18,7 @@ public interface CountryService {
 	Country update (Country pais);
 	
 	void delete (Integer id);
+	
+	List<Country> findByName (String name);
 
 }
