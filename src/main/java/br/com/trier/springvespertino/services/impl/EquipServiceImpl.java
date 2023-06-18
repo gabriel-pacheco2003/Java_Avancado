@@ -46,4 +46,9 @@ public class EquipServiceImpl implements EquipService {
 
 	}
 
+	@Override
+	public List<Equip> findByName(String name) {
+		return repository.findByName(name);
+	}
+
 }

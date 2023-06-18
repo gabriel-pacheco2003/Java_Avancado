@@ -43,6 +43,7 @@ public class CountryServiceTest extends BaseTests{
 	@DisplayName("Teste inserir país")
 	void insertCountryTest() {
 		Country pais = new Country(null, "insert");
+		countryService.insert(pais);
 		assertEquals("insert", pais.getName());
 	}
 	
@@ -83,5 +84,22 @@ public class CountryServiceTest extends BaseTests{
 		List<Country> pais = countryService.listAll();
 		assertEquals(3, pais.size());
 		assertEquals(1, pais.get(0).getId());
+	}
+	
+	@Test
+	@DisplayName("Teste busca por nome")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void findByNameTest () {
+		var pais = countryService.findByName("Brasil");
+		assertNotNull(pais);
+		assertEquals("Brasil", pais.get(0).getName());
+	}
+	
+	@Test
+	@DisplayName("Teste busca por nome inexistente")
+	@Sql({"classpath:/resources/sqls/pais.sql"})
+	void findByNameNonExistsTest() {
+		List<Country> pais = countryService.findByName("zaugteroi");
+		assertEquals(0, pais.size());
 	}
 }

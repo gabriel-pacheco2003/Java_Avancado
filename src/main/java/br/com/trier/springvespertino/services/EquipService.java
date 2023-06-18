@@ -19,4 +19,6 @@ public interface EquipService {
 	
 	void delete (Integer id);
 	
+	List<Equip> findByName (String name);
+	
 }

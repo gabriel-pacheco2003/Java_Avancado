@@ -45,4 +45,14 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 		}
 	}
 
+	@Override
+	public List<Championship> findByDescription(String description) {
+		return repository.findByDescription(description);
+	}
+
+	@Override
+	public List<Championship> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear) {
+		return repository.findByYearBetweenOrderByYearAsc(startYear, endYear);
+	}
+
 }

@@ -19,4 +19,8 @@ public interface ChampionshipService {
 	
 	void delete (Integer id);
 	
+	List<Championship> findByDescription(String description);
+	
+	List<Championship> findByYearBetweenOrderByYearAsc(Integer startYear, Integer endYear);
+	
 }
