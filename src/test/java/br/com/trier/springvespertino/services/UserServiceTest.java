@@ -2,7 +2,7 @@ package br.com.trier.springvespertino.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.springvespertino.BaseTests;
 import br.com.trier.springvespertino.models.User;
+import br.com.trier.springvespertino.services.exceptions.IntegrityViolation;
+import br.com.trier.springvespertino.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -34,18 +36,17 @@ public class UserServiceTest extends BaseTests{
 	}
 	
 	@Test
-	@DisplayName("Teste buscar por ID")
+	@DisplayName("Teste buscar por ID inexistente")
 	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	void ListByIdNonExistsTest() {
-		var usuario = userService.findById(3);
-		assertNull(usuario);
+		var exception = assertThrows(ObjectNotFound.class, () -> userService.findById(5));
+		assertEquals("O usuário 5 não existe", exception.getMessage());
 	}
 	
 	@Test
 	@DisplayName("Teste inserir usuario")
 	void insertUserTest() {
 		User usuario = new User(null, "insert", "insert", "insert");
-		userService.insert(usuario);
 		userService.insert(usuario);
 		assertEquals(1, usuario.getId());
 		assertEquals("insert", usuario.getName());
@@ -54,11 +55,27 @@ public class UserServiceTest extends BaseTests{
 	}
 	
 	@Test
+	@DisplayName("Teste inserir usuario com email existente")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
+	void insertUserWithRegisteredEmailTest() {
+		User usuario = new User(null, "insert", "email1", "insert");
+		var exception = assertThrows(IntegrityViolation.class, () -> userService.insert(usuario));
+		assertEquals("Email já existente", exception.getMessage());
+	}
+	
+	@Test
 	@DisplayName("Teste listar todos")
 	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	void listAllTest() {
 		var usuario = userService.listAll();
 		assertEquals(2, usuario.size());
+	}
+	
+	@Test
+	@DisplayName("Teste listar todos sem possuir usuários cadastrados")
+	void listAllNonExistxTest() {
+		var exception = assertThrows(ObjectNotFound.class, () -> userService.listAll());
+		assertEquals("Nenhum usuário cadastrado", exception.getMessage());
 	}
 	
 	@Test
@@ -74,10 +91,8 @@ public class UserServiceTest extends BaseTests{
 	@DisplayName("Teste remover usuario inexistente")
 	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	void removeUserNonExistsTest() {
-		userService.delete(3);
-		List<User> lista = userService.listAll();
-		assertEquals(2, lista.size());
-		assertEquals(1, lista.get(0).getId());
+		var exception = assertThrows(ObjectNotFound.class, () -> userService.findById(5));
+		assertEquals("O usuário 5 não existe", exception.getMessage());
 	}
 	
 	@Test
@@ -90,6 +105,17 @@ public class UserServiceTest extends BaseTests{
 		userService.update(usuarioAltera);
 		usuario = userService.findById(1);
 		assertEquals("altera", usuario.getName());	
+	}
+	
+	@Test
+	@DisplayName("Teste alterar usuario com email cadastrado")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
+	void updatedUsersWithRegisteredEmailTest() {
+		var usuario = userService.findById(1);
+		assertEquals("User 1", usuario.getName());
+		User usuarioAltera = new User(1, "altera","email2","altera");
+		var exception = assertThrows(IntegrityViolation.class, () -> userService.update(usuarioAltera));
+		assertEquals("Email já existente", exception.getMessage());
 	}
 	
     @Test
@@ -107,8 +133,8 @@ public class UserServiceTest extends BaseTests{
 	@DisplayName("Teset buscar por nome inexistente")
 	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	void findByNameNonExists() {
-		List<User> lista = userService.findByName("c");
-		assertEquals(0, lista.size());
+		var exception = assertThrows(ObjectNotFound.class, () -> userService.findByName("c"));
+		assertEquals("Nenhum nome de usuário inicia com c", exception.getMessage());
 	} 
 	
 }

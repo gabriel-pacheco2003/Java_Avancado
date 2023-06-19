@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.springvespertino.models.Equip;
+import br.com.trier.springvespertino.models.User;
 import br.com.trier.springvespertino.services.EquipService;
 
 @RestController
@@ -31,21 +32,23 @@ public class EquipResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Equip> findById(@PathVariable Integer id) {
-		Equip equip = service.findById(id);
-		return equip != null ? ResponseEntity.ok(equip) : ResponseEntity.noContent().build();
+		return ResponseEntity.ok(service.findById(id));
+	}
+	
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<Equip>> findByName(@PathVariable String name){
+		return ResponseEntity.ok(service.findByName(name));
 	}
 	
 	@GetMapping()
 	public ResponseEntity<List<Equip>> listAll(){
-		List<Equip> lista = service.listAll();
-		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+		return ResponseEntity.ok(service.listAll());
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Equip> update(@PathVariable Integer id, @RequestBody Equip equip){
 		equip.setId(id);
-		equip = service.insert(equip);
-		return equip != null ? ResponseEntity.ok(equip) : ResponseEntity.noContent().build();
+		return ResponseEntity.ok(service.insert(equip));
 	}
 	
 	@DeleteMapping("/{id}")

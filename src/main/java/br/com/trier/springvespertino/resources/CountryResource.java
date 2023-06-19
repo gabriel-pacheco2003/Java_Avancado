@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.springvespertino.models.Country;
+import br.com.trier.springvespertino.models.Equip;
 import br.com.trier.springvespertino.services.CountryService;
 
 @RestController
@@ -31,21 +32,23 @@ public class CountryResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Country> findById(@PathVariable Integer id) {
-		Country country = service.findById(id);
-		return country != null ? ResponseEntity.ok(country) : ResponseEntity.noContent().build();
+		return ResponseEntity.ok(service.findById(id));
 	}
 
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<Country>> findByName(@PathVariable String name){
+		return ResponseEntity.ok(service.findByName(name));
+	}
+	
 	@GetMapping()
 	public ResponseEntity<List<Country>> listAll() {
-		List<Country> lista = service.listAll();
-		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
+		return ResponseEntity.ok(service.listAll());
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Country> update(@PathVariable Integer id, @RequestBody Country country) {
 		country.setId(id);
-		country = service.update(country);
-		return country != null ? ResponseEntity.ok(country) : ResponseEntity.noContent().build();
+		return ResponseEntity.ok(service.update(country));
 	}
 
 	@DeleteMapping("/{id}")

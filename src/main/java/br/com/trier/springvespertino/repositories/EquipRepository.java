@@ -10,6 +10,8 @@ import br.com.trier.springvespertino.models.Equip;
 @Repository
 public interface EquipRepository extends JpaRepository<Equip, Integer>{
 	
-	List<Equip> findByName(String nome); 
+	List<Equip> findByNameIgnoreCase(String name); 
+	
+	Equip findByName(String name);
 
 }

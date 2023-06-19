@@ -3,6 +3,7 @@ package br.com.trier.springvespertino.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.springvespertino.BaseTests;
 import br.com.trier.springvespertino.models.Country;
+import br.com.trier.springvespertino.services.exceptions.ObjectNotFound;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -35,8 +37,8 @@ public class CountryServiceTest extends BaseTests{
 	@DisplayName("Teste busca por ID inexistente")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
 	void findByIdNonExistsTest() {
-		var pais = countryService.findById(10);
-		assertNull(pais);
+		var exception = assertThrows(ObjectNotFound.class, () -> countryService.findById(100));
+		assertEquals("País 100 não encontrado", exception.getMessage());
 	}
 	
 	@Test
@@ -80,6 +82,8 @@ public class CountryServiceTest extends BaseTests{
 	@DisplayName("Teste remover pais inexistente")
 	@Sql({"classpath:/resources/sqls/pais.sql"})
 	void deleteCountryNonExists() {
+		var exception = assertThrows(ObjectNotFound.class, () -> countryService.delete(6));
+		assertEquals("País 100 não encontrado", exception.getMessage());
 		countryService.delete(6);
 		List<Country> pais = countryService.listAll();
 		assertEquals(3, pais.size());
