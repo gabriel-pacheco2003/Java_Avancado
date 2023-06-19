@@ -18,7 +18,7 @@ public class CountryServiceImpl implements CountryService {
 	@Autowired
 	private CountryRepository repository;
 
-	private void findByNameNonExists(Country country) {
+	private void findByNameExists(Country country) {
 		Country find = repository.findByName(country.getName());
 		if (find != null && find.getId() != country.getId()) {
 			throw new IntegrityViolation("País já existente");
@@ -33,7 +33,7 @@ public class CountryServiceImpl implements CountryService {
 
 	@Override
 	public Country insert(Country country) {
-		findByNameNonExists(country);
+		findByNameExists(country);
 		return repository.save(country);
 	}
 
@@ -49,7 +49,7 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public Country update(Country country) {
 		findById(country.getId());
-		findByNameNonExists(country);
+		findByNameExists(country);
 		return repository.save(country);
 	}
 

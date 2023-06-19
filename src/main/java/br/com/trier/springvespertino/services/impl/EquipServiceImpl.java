@@ -19,7 +19,7 @@ public class EquipServiceImpl implements EquipService {
 	@Autowired
 	private EquipRepository repository;
 
-	private void findByNameNonExists(Equip equip) {
+	private void findByNameExists(Equip equip) {
 		Equip find = repository.findByName(equip.getName());
 		if (find != null && find.getId() != equip.getId()) {
 			throw new IntegrityViolation("Equipe já existente");
@@ -34,7 +34,7 @@ public class EquipServiceImpl implements EquipService {
 
 	@Override
 	public Equip insert(Equip equip) {
-		findByNameNonExists(equip);
+		findByNameExists(equip);
 		return repository.save(equip);
 	}
 
@@ -49,7 +49,7 @@ public class EquipServiceImpl implements EquipService {
 	@Override
 	public Equip update(Equip equip) {
 		findById(equip.getId());
-		findByNameNonExists(equip);
+		findByNameExists(equip);
 		return repository.save(equip);
 	}
 
