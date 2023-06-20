@@ -29,7 +29,7 @@ public class EquipServiceImpl implements EquipService {
 	@Override
 	public Equip findById(Integer id) {
 		Optional<Equip> equip = repository.findById(id);
-		return equip.orElseThrow(() -> new ObjectNotFound("Equip %s não encontrada".formatted(id)));
+		return equip.orElseThrow(() -> new ObjectNotFound("Equipe %s não encontrada".formatted(id)));
 	}
 
 	@Override

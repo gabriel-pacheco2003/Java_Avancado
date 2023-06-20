@@ -67,7 +67,7 @@ public class UserServiceTest extends BaseTests{
 	@DisplayName("Teste listar todos")
 	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	void listAllTest() {
-		var usuario = userService.listAll();
+		var usuario = userService.listAll(); 
 		assertEquals(2, usuario.size());
 	}
 	
