@@ -1,5 +1,7 @@
 package br.com.trier.springvespertino.models;
 
+import br.com.trier.springvespertino.models.dto.CountryDTO;
+import br.com.trier.springvespertino.models.dto.UserDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,5 +28,13 @@ public class Country {
 	
 	@Column(name = "nome_pais", unique = true)
 	private String name;
+	
+	public Country(CountryDTO dto) {
+		this(dto.getId(), dto.getName());
+	}
+
+	public CountryDTO toDTO() {
+		return new CountryDTO(id, name);
+	}
 	
 }

@@ -1,5 +1,7 @@
 package br.com.trier.springvespertino.models;
 
+import br.com.trier.springvespertino.models.dto.ChampionshipDTO;
+import br.com.trier.springvespertino.models.dto.UserDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,4 +32,12 @@ public class Championship {
 	@Column(name = "id_ano")
 	private Integer year;
 
+	public Championship(ChampionshipDTO dto) {
+		this(dto.getId(), dto.getDescription(), dto.getYear());
+	}
+
+	public ChampionshipDTO toDTO() {
+		return new ChampionshipDTO(id, description, year);
+	}
+	
 }

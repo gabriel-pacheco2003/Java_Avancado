@@ -22,117 +22,115 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.springvespertino.SpringVespertinoApplication;
-import br.com.trier.springvespertino.models.dto.UserDTO;
+import br.com.trier.springvespertino.models.dto.CountryDTO;
 import br.com.trier.springvespertino.resources.exceptions.StandardError;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 @SpringBootTest(classes = SpringVespertinoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserResourceTest {
+public class CountryResourceTest {
 
 	@Autowired
 	protected TestRestTemplate rest;
 
-	private ResponseEntity<UserDTO> getUser(String url) {
-		return rest.getForEntity(url, UserDTO.class);
+	private ResponseEntity<CountryDTO> getCountry(String url) {
+		return rest.getForEntity(url, CountryDTO.class);
 	}
 
-	private ResponseEntity<List<UserDTO>> getUsers(String url) {
-		return rest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserDTO>>() {
+	private ResponseEntity<List<CountryDTO>> getCountries(String url) {
+		return rest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<CountryDTO>>() {
 		});
 	}
 	
 	@Test
 	@DisplayName("Buscar por id")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql("classpath:/resources/sqls/pais.sql")
 	public void getOkTest() {
-		ResponseEntity<UserDTO> response = getUser("/usuarios/1");
+		ResponseEntity<CountryDTO> response = getCountry("/paises/1");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
-		UserDTO user = response.getBody();
-		assertEquals("User 1", user.getName());
+		assertEquals("Brasil", response.getBody().getName());
 	}
 
 	@Test
 	@DisplayName("Buscar por id inexistente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql("classpath:/resources/sqls/pais.sql")
 	public void getNotFoundTest() {
-		ResponseEntity<UserDTO> response = getUser("/usuarios/100");
+		ResponseEntity<CountryDTO> response = getCountry("/paises/100");
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 	}
 	
 	@Test
-	@DisplayName("Cadastrar usuário")
+	@DisplayName("Cadastrar país")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	public void insertUserTest() {
-		UserDTO dto = new UserDTO(null, "nome", "email", "senha");
+	@Sql("classpath:/resources/sqls/pais.sql")
+	public void insertCountryTest() {
+		CountryDTO dto = new CountryDTO(1, "nome");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
-		ResponseEntity<UserDTO> responseEntity = rest.exchange(
-	            "/usuarios", 
+		HttpEntity<CountryDTO> requestEntity = new HttpEntity<>(dto, headers);
+		ResponseEntity<CountryDTO> responseEntity = rest.exchange(
+	            "/paises", 
 	            HttpMethod.POST,  
 	            requestEntity,    
-	            UserDTO.class   
+	            CountryDTO.class   
 	    );
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
-		UserDTO user = responseEntity.getBody();
-		assertEquals("nome", user.getName());
+		assertEquals("nome", responseEntity.getBody().getName());
 	}
 	
 	@Test
-	@DisplayName("Cadastrar usuario com o email duplicado")
+	@DisplayName("Cadastrar país já existente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
-	public void insertUserWithDuplicatedEmail() {
-		UserDTO dto = new UserDTO(null, "nome", "email2", "senha");
+	@Sql("classpath:/resources/sqls/pais.sql")
+	public void insertCountryExistsTest() {
+		CountryDTO dto = new CountryDTO(null, "Brasil");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
-		ResponseEntity<UserDTO> responseEntity = rest.exchange(
-	            "/usuarios", 
+		HttpEntity<CountryDTO> requestEntity = new HttpEntity<>(dto, headers);
+		ResponseEntity<CountryDTO> responseEntity = rest.exchange(
+	            "/paises", 
 	            HttpMethod.POST,  
 	            requestEntity,    
-	            UserDTO.class   
+	            CountryDTO.class   
 	    );
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
 	
 	@Test
-	@DisplayName("Alterar usuario")
+	@DisplayName("Alterar país")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
-	public void udpateUserTest() {
-		UserDTO dto = new UserDTO(1, "update", "update", "update");
+	@Sql("classpath:/resources/sqls/pais.sql")
+	public void udpateCountryTest() {
+		CountryDTO dto = new CountryDTO(null, "update");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
-		ResponseEntity<UserDTO> responseEntity = rest.exchange(
-	            "/usuarios/1", 
+		HttpEntity<CountryDTO> requestEntity = new HttpEntity<>(dto, headers);
+		ResponseEntity<CountryDTO> responseEntity = rest.exchange(
+	            "/paises/1", 
 	            HttpMethod.PUT,  
 	            requestEntity,    
-	            UserDTO.class   
+	            CountryDTO.class   
 	    );
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
-		dto = responseEntity.getBody();
-		assertEquals("update", dto.getName());
+		assertEquals("update", responseEntity.getBody().getName());
 	}
 	
 	@Test
-	@DisplayName("Alterar usuario com email duplicado")
+	@DisplayName("Alterar país já existente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
-	public void udpateUserWithDuplicatedEmailTest() {
-		UserDTO dto = new UserDTO(1, "update", "email2", "update");
+	@Sql("classpath:/resources/sqls/pais.sql")
+	public void udpateCountryExistsTest() {
+		CountryDTO dto = new CountryDTO(1, "Japão");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
-		ResponseEntity<UserDTO> responseEntity = rest.exchange(
-	            "/usuarios/1", 
+		HttpEntity<CountryDTO> requestEntity = new HttpEntity<>(dto, headers);
+		ResponseEntity<CountryDTO> responseEntity = rest.exchange(
+	            "/paises/1", 
 	            HttpMethod.PUT,  
 	            requestEntity,    
-	            UserDTO.class   
+	            CountryDTO.class   
 	    );
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);
 	}
@@ -140,70 +138,73 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Procurar por nome")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql("classpath:/resources/sqls/pais.sql")
 	public void findByNameTest() {
-		ResponseEntity<List<UserDTO>> response = getUsers("/usuarios/name/User 1");
+		ResponseEntity<List<CountryDTO>> response = getCountries("/paises/name/Brasil");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
 	}
 	
 	@Test
 	@DisplayName("Procurar por nome inexistente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql("classpath:/resources/sqls/pais.sql")
 	public void findByNameNonExistsTest() {
-		ResponseEntity<StandardError> response = rest.getForEntity("/usuarios/name/asdbvsk", StandardError.class);
+		ResponseEntity<StandardError> response = rest.getForEntity("/paises/name/vsk", StandardError.class);
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 	}
 	
 	@Test
 	@DisplayName("Listar todos")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql("classpath:/resources/sqls/pais.sql")
 	public void listAllTest() {
-		ResponseEntity<List<UserDTO>> response = getUsers("/usuarios");
+		ResponseEntity<List<CountryDTO>> response = getCountries("/paises");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
-		assertEquals(2, response.getBody().size());
+		assertEquals(3, response.getBody().size());
 	}
 	
 	@Test
 	@DisplayName("Listar todos sem possuir cadastros")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
 	public void listAllWithNoRegistersTest() {
-		ResponseEntity<StandardError> response = rest.getForEntity("/usuarios", StandardError.class);
+		ResponseEntity<StandardError> response = rest.getForEntity("/paises", StandardError.class);
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 	}
 	
 	@Test
-	@DisplayName("Remover usuário")
+	@DisplayName("Remover país")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
-	public void deleteUserTest() {
+	@Sql("classpath:/resources/sqls/pais.sql")
+	public void deleteCountryTest() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(headers);
-		ResponseEntity<UserDTO> responseEntity = rest.exchange(
-				"/usuarios/1", 
+		HttpEntity<CountryDTO> requestEntity = new HttpEntity<>(headers);
+		ResponseEntity<CountryDTO> responseEntity = rest.exchange(
+				"/paises/1", 
 				HttpMethod.DELETE,  
 				requestEntity,    
-				UserDTO.class   
-				);
+				CountryDTO.class   
+		);
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+
 	}
 	
 	@Test
-	@DisplayName("Remover usuário inexistente")
+	@DisplayName("Remover país inexistente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	public void deleteUserNonExistsTest() {
+	@Sql("classpath:/resources/sqls/pais.sql")
+	public void deleteCountryNonExistsTest() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(headers);
-		ResponseEntity<UserDTO> responseEntity = rest.exchange(
-				"/usuarios/6", 
+		HttpEntity<CountryDTO> requestEntity = new HttpEntity<>(headers);
+		ResponseEntity<CountryDTO> responseEntity = rest.exchange(
+				"/paises/10", 
 				HttpMethod.DELETE,  
 				requestEntity,    
-				UserDTO.class   
+				CountryDTO.class   
 		);
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.NOT_FOUND);
+
 	}
-	
+
 }

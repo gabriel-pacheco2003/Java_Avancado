@@ -63,7 +63,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 	}
 
 	@Override
-	public List<Championship> findByDescription(String description) {
+	public List<Championship> findByDescriptionIgnoreCase(String description) {
 		List<Championship> lista = repository.findByDescriptionIgnoreCase(description);
 		if(lista.isEmpty()){
 			throw new ObjectNotFound("Nenhum campeonato foi encontrado".formatted(description));

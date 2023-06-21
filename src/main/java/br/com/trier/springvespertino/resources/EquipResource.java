@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.springvespertino.models.Equip;
-import br.com.trier.springvespertino.models.User;
+import br.com.trier.springvespertino.models.dto.EquipDTO;
 import br.com.trier.springvespertino.services.EquipService;
 
 @RestController
@@ -25,30 +25,30 @@ public class EquipResource {
 	private EquipService service;
 
 	@PostMapping
-	public ResponseEntity<Equip> insert(@RequestBody Equip equip) {
-		Equip newEquip = service.insert(equip);
-		return newEquip != null ? ResponseEntity.ok(newEquip) : ResponseEntity.noContent().build();
+	public ResponseEntity<EquipDTO> insert(@RequestBody EquipDTO equip) {
+		return ResponseEntity.ok(service.insert(new Equip(equip)).toDTO());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Equip> findById(@PathVariable Integer id) {
-		return ResponseEntity.ok(service.findById(id));
+	public ResponseEntity<EquipDTO> findById(@PathVariable Integer id) {
+		return ResponseEntity.ok(service.findById(id).toDTO());
 	}
 	
 	@GetMapping("/name/{name}")
-	public ResponseEntity<List<Equip>> findByName(@PathVariable String name){
-		return ResponseEntity.ok(service.findByName(name));
+	public ResponseEntity<List<EquipDTO>> findByName(@PathVariable String name){
+		return ResponseEntity.ok(service.findByName(name).stream().map((equip) -> equip.toDTO()).toList()); 
 	}
 	
 	@GetMapping()
-	public ResponseEntity<List<Equip>> listAll(){
-		return ResponseEntity.ok(service.listAll());
+	public ResponseEntity<List<EquipDTO>> listAll(){
+		return ResponseEntity.ok(service.listAll().stream().map((equip) -> equip.toDTO()).toList()); 
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Equip> update(@PathVariable Integer id, @RequestBody Equip equip){
+	public ResponseEntity<EquipDTO> update(@PathVariable Integer id, @RequestBody EquipDTO equipDTO){
+		Equip equip = new Equip(equipDTO);
 		equip.setId(id);
-		return ResponseEntity.ok(service.insert(equip));
+		return ResponseEntity.ok(service.insert(equip).toDTO());
 	}
 	
 	@DeleteMapping("/{id}")

@@ -110,7 +110,7 @@ public class ChampionshipServiceTest extends BaseTests {
 	@DisplayName("Teste busca por descrição")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void findByDescriptionTest() {
-		var campeonato = champService.findByDescription("Camp1");
+		var campeonato = champService.findByDescriptionIgnoreCase("Camp1");
 		assertNotNull(campeonato);
 		assertEquals("Camp1", campeonato.get(0).getDescription());
 	}
@@ -119,7 +119,7 @@ public class ChampionshipServiceTest extends BaseTests {
 	@DisplayName("Teste busca por descrição inexistente")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void findByDescriptionNonExistsTest() {
-		var exception = assertThrows(ObjectNotFound.class, () -> champService.findByDescription("abc"));
+		var exception = assertThrows(ObjectNotFound.class, () -> champService.findByDescriptionIgnoreCase("abc"));
 		assertEquals("Nenhum campeonato foi encontrado", exception.getMessage());
 	}
 
