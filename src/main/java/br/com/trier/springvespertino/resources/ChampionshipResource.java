@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.springvespertino.models.Championship;
 import br.com.trier.springvespertino.models.dto.ChampionshipDTO;
-import br.com.trier.springvespertino.models.dto.UserDTO;
 import br.com.trier.springvespertino.services.ChampionshipService;
 
 @RestController
