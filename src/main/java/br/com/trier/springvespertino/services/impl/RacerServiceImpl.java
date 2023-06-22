@@ -9,10 +9,11 @@ import br.com.trier.springvespertino.models.Country;
 import br.com.trier.springvespertino.models.Equip;
 import br.com.trier.springvespertino.models.Racer;
 import br.com.trier.springvespertino.repositories.RacerRepository;
+import br.com.trier.springvespertino.services.RacerService;
 import br.com.trier.springvespertino.services.exceptions.ObjectNotFound;
 
 @Service
-public class RacerServiceImpl {
+public class RacerServiceImpl implements RacerService{
 
 	@Autowired
 	private RacerRepository repository;
@@ -41,21 +42,21 @@ public class RacerServiceImpl {
 		repository.delete(findById(id));
 	}
 
-	List<Racer> findByNameStartsWithIgnoreCase(String name) {
+	public List<Racer> findByNameStartsWithIgnoreCase(String name) {
 		if (repository.findByNameStartsWithIgnoreCase(name).isEmpty()) {
-			throw new ObjectNotFound("Nenhum piloto foi encontrado com o nome %s".formatted(name));
+			throw new ObjectNotFound("Nenhum piloto encontrado com o nome %s".formatted(name));
 		}
 		return repository.findByNameStartsWithIgnoreCase(name);
 	}
 
-	List<Racer> findByCountry(Country country) {
+	public List<Racer> findByCountry(Country country) {
 		if (repository.findByCountry(country).isEmpty()) {
 			throw new ObjectNotFound("Nenhum piloto foi encontrado");
 		}
 		return repository.findByCountry(country);
 	}
 
-	List<Racer> findByEquipOrderByName(Equip equip) {
+	public List<Racer> findByEquipOrderByName(Equip equip) {
 		if (repository.findByEquipOrderByName(equip).isEmpty()) {
 			throw new ObjectNotFound("Nenhum piloto foi encontrado");
 		}

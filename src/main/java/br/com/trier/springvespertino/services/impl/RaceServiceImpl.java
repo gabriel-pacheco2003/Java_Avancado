@@ -10,6 +10,7 @@ import br.com.trier.springvespertino.models.Championship;
 import br.com.trier.springvespertino.models.Race;
 import br.com.trier.springvespertino.models.Speedway;
 import br.com.trier.springvespertino.repositories.RaceRepository;
+import br.com.trier.springvespertino.services.ChampionshipService;
 import br.com.trier.springvespertino.services.RaceService;
 import br.com.trier.springvespertino.services.exceptions.IntegrityViolation;
 import br.com.trier.springvespertino.services.exceptions.ObjectNotFound;
@@ -19,12 +20,17 @@ public class RaceServiceImpl implements RaceService {
 
 	@Autowired
 	private RaceRepository repository;
+	
+	@Autowired
+	private ChampionshipService championshipService;
 
 	private void validateDate(Race race) {
+		Championship champ = championshipService.findById(race.getChampionship().getId());
+		
 		if (race.getDate() == null ){
-			throw new IntegrityViolation("Data inválida");
+			throw new IntegrityViolation("Data inválida"); 
 		}
-		if (race.getDate().getYear() != race.getChampionship().getYear()) {
+		if (race.getDate().getYear() != champ.getYear()) {
 			throw new IntegrityViolation("Data informada difere do Campeonato");
 		}
 	}

@@ -26,10 +26,10 @@ public class Championship {
 	@Column(name = "id_campeonato")
 	private Integer id;
 	
-	@Column(name = "id_descricao")
+	@Column(name = "descricao_campeonato")
 	private String description;
 	
-	@Column(name = "id_ano")
+	@Column(name = "ano_campeonato")
 	private Integer year;
 
 	public Championship(ChampionshipDTO dto) {

@@ -1,0 +1,3 @@
+insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (1, '2000-01-01T10:00:00Z', 1, 1);
+insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (2, '2005-01-01T10:00:00Z', 2, 2);
+insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (3, '2010-01-01T10:00:00Z', 2, 1);

@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import br.com.trier.springvespertino.models.Championship;
-import br.com.trier.springvespertino.models.User;
 import br.com.trier.springvespertino.repositories.ChampionshipRepository;
 import br.com.trier.springvespertino.services.ChampionshipService;
 import br.com.trier.springvespertino.services.exceptions.IntegrityViolation;
