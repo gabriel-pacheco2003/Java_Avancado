@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.trier.springvespertino.models.Championship;
 import br.com.trier.springvespertino.models.Race;
 import br.com.trier.springvespertino.models.Speedway;
+import br.com.trier.springvespertino.models.dto.RaceDTO;
 import br.com.trier.springvespertino.services.ChampionshipService;
 import br.com.trier.springvespertino.services.RaceService;
 import br.com.trier.springvespertino.services.SpeedwayService;
@@ -35,28 +36,29 @@ public class RaceResource {
 	private ChampionshipService champService;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Race> findById(@PathVariable Integer id) {
-		return ResponseEntity.ok(service.findById(id));
+	public ResponseEntity<RaceDTO> findById(@PathVariable Integer id) {
+		return ResponseEntity.ok(service.findById(id).toDTO());
 	}
 
 	@PostMapping
-	public ResponseEntity<Race> insert(@RequestBody Race race) {
-		speedwayService.findById(race.getSpeedway().getId());
-		champService.findById(race.getChampionship().getId());
-		return ResponseEntity.ok(service.insert(race));
+	public ResponseEntity<RaceDTO> insert(@RequestBody RaceDTO raceDTO) {
+		return ResponseEntity.ok(service.insert(new Race(raceDTO, 
+				speedwayService.findById(raceDTO.getSpeedwayId()),
+				champService.findById(raceDTO.getChampionshipId()))).toDTO());
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Race>> listAll() {
-		return ResponseEntity.ok(service.listAll().stream().map((race)  -> race).toList());
+	public ResponseEntity<List<RaceDTO>> listAll() {
+		return ResponseEntity.ok(service.listAll().stream().map((race)  -> race.toDTO()).toList());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Race> update(@PathVariable Integer id, @RequestBody Race race) {
+	public ResponseEntity<RaceDTO> update(@PathVariable Integer id, @RequestBody RaceDTO raceDTO) {
+		Race race = new Race(raceDTO, 
+				speedwayService.findById(raceDTO.getSpeedwayId()),
+				champService.findById(raceDTO.getChampionshipId()));
 		race.setId(id);
-		speedwayService.findById(race.getSpeedway().getId());
-		champService.findById(race.getChampionship().getId());
-		return ResponseEntity.ok(service.update(race));
+		return ResponseEntity.ok(service.update(race).toDTO());
 	}
 
 	@DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package br.com.trier.springvespertino.models;
 
+import br.com.trier.springvespertino.models.dto.RacerDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +35,13 @@ public class Racer {
 
 	@ManyToOne
 	private Equip equip;
+	
+	public Racer(RacerDTO dto, Country country, Equip equip) {
+		this(dto.getId(), dto.getName(), country, equip);
+	}
+
+	public RacerDTO toDTO() {
+		return new RacerDTO(id, name, country.getId(), country.getName(), equip.getId(), equip.getName());
+	}
 
 }

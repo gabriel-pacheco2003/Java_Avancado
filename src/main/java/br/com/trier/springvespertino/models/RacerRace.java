@@ -1,6 +1,5 @@
 package br.com.trier.springvespertino.models;
 
-import br.com.trier.springvespertino.models.dto.SpeedwayDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,30 +17,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode (of = "id")
-@Entity(name = "pista")
-public class Speedway { 
+@Entity(name = "pilotoCorrida")
+public class RacerRace {
 	
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_pista")
+	@Column(name = "id_pilotoCorrida")
 	private Integer id;
 	
-	@Column(name = "nome_pista")
-	private String name;
-	
-	@Column(name = "tamanho_pista")
-	private Integer size;
-
 	@ManyToOne
-	private Country country;
+	private Racer racer;
 	
-	public Speedway(SpeedwayDTO dto) {
-		this(dto.getId(), dto.getName(), dto.getSize(), dto.getCountry());
-	}
+	@ManyToOne
+	private Race race;
 
-	public SpeedwayDTO toDTO() {
-		return new SpeedwayDTO(id, name, size, country);
-	}
+	@Column(name = "colocacao")
+	private Integer rank;
 	
+
 }

@@ -2,6 +2,8 @@ package br.com.trier.springvespertino.models;
 
 import java.time.ZonedDateTime;
 
+import br.com.trier.springvespertino.models.dto.RaceDTO;
+import br.com.trier.springvespertino.utils.DateUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,13 +17,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode (of = "id")
 @Entity(name = "corrida")
 public class Race {
 
-	@Setter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_corrida")
@@ -35,5 +37,13 @@ public class Race {
 	
 	@ManyToOne
 	private Championship championship;
+	
+	public Race(RaceDTO dto, Speedway speedway, Championship championship) {
+	this(dto.getId(), DateUtils.stringToDate(dto.getDate()), speedway, championship);
+	}
+	
+	public RaceDTO toDTO() {
+		return new RaceDTO(id, DateUtils.dateToString(date), speedway.getId(), speedway.getName(), championship.getId(), championship.getDescription());
+	}
 	
 }

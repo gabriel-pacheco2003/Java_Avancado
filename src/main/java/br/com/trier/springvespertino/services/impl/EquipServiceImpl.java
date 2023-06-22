@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.trier.springvespertino.models.Country;
 import br.com.trier.springvespertino.models.Equip;
 import br.com.trier.springvespertino.repositories.EquipRepository;
 import br.com.trier.springvespertino.services.EquipService;

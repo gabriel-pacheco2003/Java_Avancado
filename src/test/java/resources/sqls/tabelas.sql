@@ -25,5 +25,10 @@ insert into piloto (id_piloto, nome_piloto, country_id_pais, equip_id_equipe) va
 insert into piloto (id_piloto, nome_piloto, country_id_pais, equip_id_equipe) values (5, 'Piloto5', 1, 1);
 
 
+insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (1, '2000-01-01 10:00:00', 1, 1);
+insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (2, '2005-01-01 10:00:00', 2, 2);
+insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (3, '2010-01-01 10:00:00', 2, 1);
+
+
 INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES(1, 'User 1', 'email1', 'senha1');
 INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES(2, 'User 2', 'email2', 'senha2');

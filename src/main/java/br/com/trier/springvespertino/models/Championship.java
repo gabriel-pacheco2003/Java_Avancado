@@ -40,4 +40,4 @@ public class Championship {
 		return new ChampionshipDTO(id, description, year);
 	}
 	
-}
+}  

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.trier.springvespertino.models.Country;
 import br.com.trier.springvespertino.models.Equip;
 import br.com.trier.springvespertino.models.Racer;
+import br.com.trier.springvespertino.models.dto.RacerDTO;
 import br.com.trier.springvespertino.services.CountryService;
 import br.com.trier.springvespertino.services.EquipService;
 import br.com.trier.springvespertino.services.RacerService;
@@ -34,28 +35,29 @@ public class RacerResource {
 	private EquipService equipService;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Racer> findById(@PathVariable Integer id) {
-		return ResponseEntity.ok(service.findById(id));
+	public ResponseEntity<RacerDTO> findById(@PathVariable Integer id) {
+		return ResponseEntity.ok(service.findById(id).toDTO());
 	}
 
 	@PostMapping
-	public ResponseEntity<Racer> insert(@RequestBody Racer racer) {
-		countryService.findById(racer.getCountry().getId());
-		equipService.findById(racer.getEquip().getId());
-		return ResponseEntity.ok(service.insert(racer));
+	public ResponseEntity<RacerDTO> insert(@RequestBody RacerDTO racerDTO) {
+		return ResponseEntity.ok(service.insert(new Racer(racerDTO,
+				countryService.findById(racerDTO.getCountryId()),
+				equipService.findById(racerDTO.getEquipId()))).toDTO());
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Racer>> listAll() {
-		return ResponseEntity.ok(service.listAll().stream().map((racer) -> racer).toList());
+	public ResponseEntity<List<RacerDTO>> listAll() {
+		return ResponseEntity.ok(service.listAll().stream().map((racer) -> racer.toDTO()).toList());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Racer> update(@PathVariable Integer id, @RequestBody Racer racer) {
+	public ResponseEntity<RacerDTO> update(@PathVariable Integer id, @RequestBody RacerDTO racerDTO) {
+		Racer racer = new Racer(racerDTO, 
+				countryService.findById(racerDTO.getCountryId()),
+				equipService.findById(racerDTO.getEquipId()));
 		racer.setId(id);
-		countryService.findById(racer.getCountry().getId());
-		equipService.findById(racer.getEquip().getId());
-		return ResponseEntity.ok(service.update(racer));
+		return ResponseEntity.ok(service.update(racer).toDTO());
 	}
 
 	@DeleteMapping("/{id}")
