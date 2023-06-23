@@ -23,7 +23,7 @@ import br.com.trier.springvespertino.services.RaceService;
 import br.com.trier.springvespertino.services.SpeedwayService;
 
 @RestController
-@RequestMapping("/corridas")
+@RequestMapping("/races")
 public class RaceResource {
 
 	@Autowired
@@ -42,20 +42,18 @@ public class RaceResource {
 
 	@PostMapping
 	public ResponseEntity<RaceDTO> insert(@RequestBody RaceDTO raceDTO) {
-		return ResponseEntity.ok(service.insert(new Race(raceDTO, 
-				speedwayService.findById(raceDTO.getSpeedwayId()),
+		return ResponseEntity.ok(service.insert(new Race(raceDTO, speedwayService.findById(raceDTO.getSpeedwayId()),
 				champService.findById(raceDTO.getChampionshipId()))).toDTO());
 	}
 
 	@GetMapping()
 	public ResponseEntity<List<RaceDTO>> listAll() {
-		return ResponseEntity.ok(service.listAll().stream().map((race)  -> race.toDTO()).toList());
+		return ResponseEntity.ok(service.listAll().stream().map((race) -> race.toDTO()).toList());
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<RaceDTO> update(@PathVariable Integer id, @RequestBody RaceDTO raceDTO) {
-		Race race = new Race(raceDTO, 
-				speedwayService.findById(raceDTO.getSpeedwayId()),
+		Race race = new Race(raceDTO, speedwayService.findById(raceDTO.getSpeedwayId()),
 				champService.findById(raceDTO.getChampionshipId()));
 		race.setId(id);
 		return ResponseEntity.ok(service.update(race).toDTO());
@@ -63,22 +61,25 @@ public class RaceResource {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Race> delete(@PathVariable Integer id) {
-		service.delete(id); 
+		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/dataInicial/{dateIn}/dataFinal/{dateFin}")
-	public ResponseEntity<List<Race>> findByDateBetweenOrderByDateDesc(@PathVariable ZonedDateTime dateIn, @PathVariable ZonedDateTime dateFin) {
-		return ResponseEntity.ok(service.findByDateBetweenOrderByDateDesc(dateIn, dateFin).stream().map((race) -> race).toList());
+	@GetMapping("/inicialDate/{dateIn}/finalDate/{dateFin}")
+	public ResponseEntity<List<Race>> findByDateBetweenOrderByDateDesc(@PathVariable ZonedDateTime dateIn,
+			@PathVariable ZonedDateTime dateFin) {
+		return ResponseEntity
+				.ok(service.findByDateBetweenOrderByDateDesc(dateIn, dateFin).stream().map((race) -> race).toList());
 	}
 
-	@GetMapping("/campeonato/{camp}")
-	public ResponseEntity<List<Race>> findByChampionshipOrderByDate(@PathVariable Championship championship) {
-		return ResponseEntity.ok(service.findByChampionshipOrderByDate(championship).stream().map((race) -> race).toList());
+	@GetMapping("/championship/{championshipId}")
+	public ResponseEntity<List<Race>> findByChampionshipOrderByDate(@PathVariable Championship championshipId) {
+		return ResponseEntity
+				.ok(service.findByChampionshipOrderByDate(championshipId).stream().map((race) -> race).toList());
 	}
 
-	@GetMapping("/pista/{pista}")
-	public ResponseEntity<List<Race>> findBySpeedwayOrderByDate(@PathVariable Speedway speedway) {
-		return ResponseEntity.ok(service.findBySpeedwayOrderByDate(speedway).stream().map((race) -> race).toList());
+	@GetMapping("/speedway/{speedwayId}")
+	public ResponseEntity<List<Race>> findBySpeedwayOrderByDate(@PathVariable Speedway speedwayId) {
+		return ResponseEntity.ok(service.findBySpeedwayOrderByDate(speedwayId).stream().map((race) -> race).toList());
 	}
 }

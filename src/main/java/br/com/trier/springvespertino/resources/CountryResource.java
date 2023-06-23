@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.trier.springvespertino.models.Country;
-import br.com.trier.springvespertino.models.User;
 import br.com.trier.springvespertino.models.dto.CountryDTO;
 import br.com.trier.springvespertino.services.CountryService;
 
@@ -35,15 +34,9 @@ public class CountryResource {
 		return ResponseEntity.ok(service.findById(id).toDTO());
 	}
 
-	@GetMapping("/name/{name}")
-	public ResponseEntity<List<CountryDTO>> findByName(@PathVariable String name){
-		return ResponseEntity.ok(service.findByName(name).stream().map((country) -> country.toDTO()).toList()); 
-
-	}
-	
 	@GetMapping()
 	public ResponseEntity<List<CountryDTO>> listAll() {
-		return ResponseEntity.ok(service.listAll().stream().map((country) -> country.toDTO()).toList()); 
+		return ResponseEntity.ok(service.listAll().stream().map((country) -> country.toDTO()).toList());
 	}
 
 	@PutMapping("/{id}")
@@ -58,4 +51,11 @@ public class CountryResource {
 		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<CountryDTO>> findByName(@PathVariable String name) {
+		return ResponseEntity.ok(service.findByName(name).stream().map((country) -> country.toDTO()).toList());
+
+	}
+	
 }

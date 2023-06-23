@@ -4,16 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.springvespertino.BaseTests;
-import br.com.trier.springvespertino.models.Championship;
-import br.com.trier.springvespertino.models.Country;
 import br.com.trier.springvespertino.models.Speedway;
 import br.com.trier.springvespertino.services.exceptions.IntegrityViolation;
 import br.com.trier.springvespertino.services.exceptions.ObjectNotFound;
@@ -30,22 +26,19 @@ public class SpeedwayServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar por ID")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findByIdTest() {
 		var speedway = speedwayService.findById(1);
-		var country = countryService.findById(1);
 		assertNotNull(speedway);
 		assertEquals(1, speedway.getId());
 		assertEquals("Pista1", speedway.getName());
 		assertEquals(5000, speedway.getSize());
-		assertEquals(country, speedway.getCountry());
+		assertEquals(countryService.findById(1), speedway.getCountry());
 	}
 
 	@Test
 	@DisplayName("Teste buscar por ID inexistente")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void ListByIdNonExistsTest() {
 		var exception = assertThrows(ObjectNotFound.class, () -> speedwayService.findById(5));
 		assertEquals("Pista 5 não encontrada", exception.getMessage());
@@ -53,49 +46,63 @@ public class SpeedwayServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste inserir pista")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void insertSpeedwayTest() {
-		var country = countryService.findById(1);
-		Speedway speedway = new Speedway(1, "insert", 5000, country);
+		Speedway speedway = new Speedway(1, "insert", 5000, countryService.findById(1));
 		speedwayService.insert(speedway);
 		assertEquals(1, speedway.getId());
 		assertEquals("insert", speedway.getName());
 		assertEquals(5000, speedway.getSize());
-		assertEquals(country, speedway.getCountry());
+		assertEquals(countryService.findById(1), speedway.getCountry());
 	}
 
 	@Test
 	@DisplayName("Teste inserir pista com tamanho inválido")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void insertSpeedwayWithInvalidSizeTest() {
-		var country = countryService.findById(1);
-		Speedway speedway = new Speedway(1, "insert", 0, country);
+		Speedway speedway = new Speedway(1, "insert", 0, countryService.findById(1));
 		var exception = assertThrows(IntegrityViolation.class, () -> speedwayService.insert(speedway));
 		assertEquals("Tamanho da pista inválido", exception.getMessage());
 	}
 
 	@Test
 	@DisplayName("Teste listar todos")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void listAllTest() {
 		var speedway = speedwayService.listAll();
 		assertEquals(3, speedway.size());
 	}
 
 	@Test
-	@DisplayName("Teste listar todos sem possuir pistas cadastradas")
+	@DisplayName("Teste listar todos sem cadastros de pistas")
 	void listAllNonExistxTest() {
 		var exception = assertThrows(ObjectNotFound.class, () -> speedwayService.listAll());
 		assertEquals("Nenhuma pista cadastrada", exception.getMessage());
 	}
 
 	@Test
+	@DisplayName("Teste alterar pista")
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	void updatedSpeedwayTest() {
+		assertEquals("Pista1", speedwayService.findById(1).getName());
+		Speedway speedway = new Speedway(1, "update", 0, countryService.findById(1));
+		speedwayService.update(speedway);
+		assertEquals("update", speedwayService.findById(1).getName());
+
+	}
+
+	@Test
+	@DisplayName("Teste alterar pista com tamanho inválido")
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	void updatedSpeedwayWithInvalidSizeTest() {
+		Speedway speedway = new Speedway(1, "update", 0, countryService.findById(1));
+		var exception = assertThrows(IntegrityViolation.class, () -> speedwayService.insert(speedway));
+		assertEquals("Tamanho da pista inválido", exception.getMessage());
+	}
+
+	@Test
 	@DisplayName("Teste remover pista")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void removeSpeedwayTest() {
 		speedwayService.delete(1);
 		assertEquals(2, speedwayService.listAll().size());
@@ -103,42 +110,23 @@ public class SpeedwayServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste remover pista inexistente")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void removeSpeedwayNonExistsTest() {
-		var exception = assertThrows(ObjectNotFound.class, () -> speedwayService.findById(5));
+		var exception = assertThrows(ObjectNotFound.class, () -> speedwayService.delete(5));
 		assertEquals("Pista 5 não encontrada", exception.getMessage());
 	}
 
 	@Test
-	@DisplayName("Teste alterar pista")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
-	void updatedSpeedwaysTest() {
-		var speedway = speedwayService.findById(1);
-		assertEquals("Pista1", speedway.getName());
-		speedway.setName("update");
-		speedwayService.update(speedway);
-		var speedwayUpdated = speedwayService.findById(1);
-		assertEquals("update", speedwayUpdated.getName());
-	}
-
-	@Test
-	@DisplayName("Teste buscar pista por nome")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@DisplayName("Teste busca pista por nome")
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findByNameTest() {
-		var speedway = speedwayService.findByNameStartsWithIgnoreCase("pist");
-		assertNotNull(speedway);
-		assertEquals(3, speedway.size());
-		var speedway1 = speedwayService.findByNameStartsWithIgnoreCase("pista1");
-		assertEquals(1, speedway1.size());
+		assertEquals(3, speedwayService.findByNameStartsWithIgnoreCase("pist").size());
+		assertEquals(1, speedwayService.findByNameStartsWithIgnoreCase("pista1").size());
 	}
 
 	@Test
-	@DisplayName("Teste buscar por nome inexistente")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@DisplayName("Teste busca por nome inexistente")
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findByNameNonExistsTest() {
 		var exception = assertThrows(ObjectNotFound.class,
 				() -> speedwayService.findByNameStartsWithIgnoreCase("fdanajks"));
@@ -146,19 +134,15 @@ public class SpeedwayServiceTest extends BaseTests {
 	}
 
 	@Test
-	@DisplayName("Teste busca por tamanho")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@DisplayName("Teste busca por tamanho entre")
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findBySizeBetweenTest() {
-		List<Speedway> lista = speedwayService.findBySizeBetween(5000, 6000);
-		assertNotNull(lista);
-		assertEquals(2, lista.size());
+		assertEquals(2, speedwayService.findBySizeBetween(5000, 6000).size());
 	}
 
 	@Test
 	@DisplayName("Teste busca por tamanho não encontrado")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findBySizeBetweenNotFoundTest() {
 		var exception = assertThrows(ObjectNotFound.class, () -> speedwayService.findBySizeBetween(1000, 3000));
 		assertEquals("Nenhuma pista foi encontrada", exception.getMessage());
@@ -166,21 +150,17 @@ public class SpeedwayServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste busca pista por país")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findSpeedwayByCountryTest() {
-		var country = countryService.findById(2);
-		var speedway = speedwayService.findByCountryOrderBySizeDesc(country);
-		assertEquals(2, speedway.size());
+		assertEquals(2, speedwayService.findByCountryOrderBySizeDesc(countryService.findById(2)).size());
 	}
 
 	@Test
 	@DisplayName("Teste busca pista por país não encontrado")
-	@Sql({ "classpath:/resources/sqls/pais.sql" })
-	@Sql({ "classpath:/resources/sqls/pista.sql" })
+	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
 	void findSpeedwayByCountryNotFoundTest() {
-		var country = countryService.findById(3);
-		var exception = assertThrows(ObjectNotFound.class, () -> speedwayService.findByCountryOrderBySizeDesc(country));
+		var exception = assertThrows(ObjectNotFound.class,
+				() -> speedwayService.findByCountryOrderBySizeDesc(countryService.findById(3)));
 		assertEquals("Nenhuma pista foi encontrada", exception.getMessage());
 	}
 }

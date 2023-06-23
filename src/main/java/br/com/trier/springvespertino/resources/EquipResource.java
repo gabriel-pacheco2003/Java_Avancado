@@ -18,7 +18,7 @@ import br.com.trier.springvespertino.models.dto.EquipDTO;
 import br.com.trier.springvespertino.services.EquipService;
 
 @RestController
-@RequestMapping("/equipes")
+@RequestMapping("/equips")
 public class EquipResource {
 
 	@Autowired
@@ -33,27 +33,28 @@ public class EquipResource {
 	public ResponseEntity<EquipDTO> findById(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findById(id).toDTO());
 	}
-	
-	@GetMapping("/name/{name}")
-	public ResponseEntity<List<EquipDTO>> findByName(@PathVariable String name){
-		return ResponseEntity.ok(service.findByName(name).stream().map((equip) -> equip.toDTO()).toList()); 
-	}
-	
+
 	@GetMapping()
-	public ResponseEntity<List<EquipDTO>> listAll(){
-		return ResponseEntity.ok(service.listAll().stream().map((equip) -> equip.toDTO()).toList()); 
+	public ResponseEntity<List<EquipDTO>> listAll() {
+		return ResponseEntity.ok(service.listAll().stream().map((equip) -> equip.toDTO()).toList());
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<EquipDTO> update(@PathVariable Integer id, @RequestBody EquipDTO equipDTO){
+	public ResponseEntity<EquipDTO> update(@PathVariable Integer id, @RequestBody EquipDTO equipDTO) {
 		Equip equip = new Equip(equipDTO);
 		equip.setId(id);
 		return ResponseEntity.ok(service.insert(equip).toDTO());
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Equip> delete(@PathVariable Integer id){
+	public ResponseEntity<Equip> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<EquipDTO>> findByName(@PathVariable String name) {
+		return ResponseEntity.ok(service.findByName(name).stream().map((equip) -> equip.toDTO()).toList());
+	}
+	
 }

@@ -18,47 +18,50 @@ import br.com.trier.springvespertino.models.dto.ChampionshipDTO;
 import br.com.trier.springvespertino.services.ChampionshipService;
 
 @RestController
-@RequestMapping("/campeonatos")
+@RequestMapping("/championships")
 public class ChampionshipResource {
-	
+
 	@Autowired
 	private ChampionshipService service;
-	
+
 	@PostMapping
-	public ResponseEntity<ChampionshipDTO> insert (@RequestBody ChampionshipDTO champ){
+	public ResponseEntity<ChampionshipDTO> insert(@RequestBody ChampionshipDTO champ) {
 		return ResponseEntity.ok(service.insert(new Championship(champ)).toDTO());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ChampionshipDTO> findById(@PathVariable Integer id){
+	public ResponseEntity<ChampionshipDTO> findById(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findById(id).toDTO());
 	}
-	
-	@GetMapping("/descricao/{descricao}")
-	public ResponseEntity<List<ChampionshipDTO>> findByDescription(@PathVariable String descricao){
-		return ResponseEntity.ok(service.findByDescriptionIgnoreCase(descricao).stream().map((champ) -> champ.toDTO()).toList()); 
-	}
-	
-	@GetMapping("/anoInicial/{anoI}/anoFinal/{anoF}")
-	public ResponseEntity<List<ChampionshipDTO>> findByYearBetween(@PathVariable Integer anoI, @PathVariable Integer anoF){
-		return ResponseEntity.ok(service.findByYearBetweenOrderByYearAsc(anoI, anoF).stream().map((champ) -> champ.toDTO()).toList());
-	}
-	
+
 	@GetMapping()
-	public ResponseEntity<List<ChampionshipDTO>> listAll(){
-		return ResponseEntity.ok(service.listAll().stream().map((champ) -> champ.toDTO()).toList()); 
+	public ResponseEntity<List<ChampionshipDTO>> listAll() {
+		return ResponseEntity.ok(service.listAll().stream().map((champ) -> champ.toDTO()).toList());
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<ChampionshipDTO> update (@PathVariable Integer id, @RequestBody ChampionshipDTO champDTO){
+	public ResponseEntity<ChampionshipDTO> update(@PathVariable Integer id, @RequestBody ChampionshipDTO champDTO) {
 		Championship champ = new Championship(champDTO);
 		champ.setId(id);
 		return ResponseEntity.ok((service.insert(champ).toDTO()));
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Championship> delete (@PathVariable Integer id){
+	public ResponseEntity<Championship> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/description/{description}")
+	public ResponseEntity<List<ChampionshipDTO>> findByDescription(@PathVariable String description) {
+		return ResponseEntity
+				.ok(service.findByDescriptionIgnoreCase(description).stream().map((champ) -> champ.toDTO()).toList());
+	}
+
+	@GetMapping("/inicialYear/{yearIn}/finalYear/{yearFin}")
+	public ResponseEntity<List<ChampionshipDTO>> findByYearBetween(@PathVariable Integer yearIn,
+			@PathVariable Integer yearFin) {
+		return ResponseEntity.ok(service.findByYearBetweenOrderByYearAsc(yearIn, yearFin).stream()
+				.map((champ) -> champ.toDTO()).toList());
 	}
 }

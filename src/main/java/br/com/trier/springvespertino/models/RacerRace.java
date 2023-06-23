@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode (of = "id")
 @Entity(name = "pilotoCorrida")
 public class RacerRace {
 	
+	@Setter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_pilotoCorrida")
@@ -41,7 +41,7 @@ public class RacerRace {
 	}
 	
 	public RacerRaceDTO toDTO() {
-		return new RacerRaceDTO(id, rank, racer.getId(), racer.getName(), race.getId(), DateUtils.dateToString(race.getDate()), race.getSpeedway());
+		return new RacerRaceDTO(id, rank, racer.getId(), racer.getName(), race.getId(), DateUtils.dateToString(race.getDate()), race.getSpeedway().getName());
 	}
 
 }

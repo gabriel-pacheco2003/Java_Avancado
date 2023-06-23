@@ -16,8 +16,8 @@ import br.com.trier.springvespertino.services.exceptions.ObjectNotFound;
 public class RacerRaceServiceImpl implements RacerRaceService {
 
 	@Autowired
-	private RacerRaceRepository repository;
-
+	private RacerRaceRepository repository; 
+	
 	@Override
 	public RacerRace findById(Integer id) {
 		return repository.findById(id)
@@ -59,7 +59,7 @@ public class RacerRaceServiceImpl implements RacerRaceService {
 	@Override
 	public List<RacerRace> findByRacerOrderByRank(Racer racer) {
 		if (repository.findByRacerOrderByRank(racer).isEmpty()) {
-			throw new ObjectNotFound("Nenhum Piloto encontrado");
+			throw new ObjectNotFound("Nenhum piloto encontrado");
 		}
 		return repository.findByRacerOrderByRank(racer);
 	}

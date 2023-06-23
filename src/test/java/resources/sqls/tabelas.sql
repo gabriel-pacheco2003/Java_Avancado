@@ -29,6 +29,16 @@ insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speed
 insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (2, '2005-01-01 10:00:00', 2, 2);
 insert into corrida (id_corrida, data_corrida, championship_id_campeonato, speedway_id_pista) values (3, '2010-01-01 10:00:00', 2, 1);
 
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(1, 1, 1, 1);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(2, 2, 1, 2);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(3, 3, 1, 3);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(4, 1, 2, 1);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(5, 2, 2, 2);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(6, 3, 2, 3);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(7, 1, 3, 1);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(8, 2, 3, 2);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(9, 3, 3, 3);
+
 
 INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES(1, 'User 1', 'email1', 'senha1');
 INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES(2, 'User 2', 'email2', 'senha2');

@@ -22,7 +22,7 @@ import br.com.trier.springvespertino.services.EquipService;
 import br.com.trier.springvespertino.services.RacerService;
 
 @RestController
-@RequestMapping("/pilotos")
+@RequestMapping("/racers")
 public class RacerResource {
 
 	@Autowired
@@ -34,16 +34,15 @@ public class RacerResource {
 	@Autowired
 	private EquipService equipService;
 
+	@PostMapping
+	public ResponseEntity<RacerDTO> insert(@RequestBody RacerDTO racerDTO) {
+		return ResponseEntity.ok(service.insert(new Racer(racerDTO, countryService.findById(racerDTO.getCountryId()),
+				equipService.findById(racerDTO.getEquipId()))).toDTO());
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<RacerDTO> findById(@PathVariable Integer id) {
 		return ResponseEntity.ok(service.findById(id).toDTO());
-	}
-
-	@PostMapping
-	public ResponseEntity<RacerDTO> insert(@RequestBody RacerDTO racerDTO) {
-		return ResponseEntity.ok(service.insert(new Racer(racerDTO,
-				countryService.findById(racerDTO.getCountryId()),
-				equipService.findById(racerDTO.getEquipId()))).toDTO());
 	}
 
 	@GetMapping()
@@ -53,32 +52,31 @@ public class RacerResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<RacerDTO> update(@PathVariable Integer id, @RequestBody RacerDTO racerDTO) {
-		Racer racer = new Racer(racerDTO, 
-				countryService.findById(racerDTO.getCountryId()),
+		Racer racer = new Racer(racerDTO, countryService.findById(racerDTO.getCountryId()),
 				equipService.findById(racerDTO.getEquipId()));
 		racer.setId(id);
 		return ResponseEntity.ok(service.update(racer).toDTO());
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Racer> delete(@PathVariable Integer id){
+	public ResponseEntity<Racer> delete(@PathVariable Integer id) {
 		service.delete(id);
-		return ResponseEntity.ok().build(); 
-}
+		return ResponseEntity.ok().build();
+	}
 
 	@GetMapping("/name/{name}")
 	public ResponseEntity<List<Racer>> findByNameStartsWithIgnoreCase(@PathVariable String name) {
 		return ResponseEntity.ok(service.findByNameStartsWithIgnoreCase(name).stream().map((racer) -> racer).toList());
 	}
 
-	@GetMapping("/pais/{idPais}")
-	public ResponseEntity<List<Racer>> findByCountry(Country country) {
-		return ResponseEntity.ok(service.findByCountry(countryService.findById(country.getId())));
+	@GetMapping("/country/{countryId}")
+	public ResponseEntity<List<Racer>> findByCountry(Country countryId) {
+		return ResponseEntity.ok(service.findByCountry(countryService.findById(countryId.getId())));
 	}
 
-	@GetMapping("/equipe/{idEquipe}")
-	public ResponseEntity<List<Racer>> findByEquipOrderByName(Equip equip){
-		return ResponseEntity.ok(service.findByEquipOrderByName(equipService.findById(equip.getId())));
+	@GetMapping("/equip/{equipId}")
+	public ResponseEntity<List<Racer>> findByEquipOrderByName(Equip equipId) {
+		return ResponseEntity.ok(service.findByEquipOrderByName(equipService.findById(equipId.getId())));
 
 	}
 

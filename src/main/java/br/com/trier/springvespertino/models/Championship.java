@@ -1,7 +1,6 @@
 package br.com.trier.springvespertino.models;
 
 import br.com.trier.springvespertino.models.dto.ChampionshipDTO;
-import br.com.trier.springvespertino.models.dto.UserDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

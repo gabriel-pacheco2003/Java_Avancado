@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User findById(Integer id) {
 		Optional<User> user = repository.findById(id);
-		return user.orElseThrow(() -> new ObjectNotFound("O usuário %s não existe".formatted(id)));
+		return user.orElseThrow(() -> new ObjectNotFound("Usuário %s não encontrado".formatted(id)));
 	}
 
 	@Override
@@ -60,14 +60,12 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<User> findByName(String name) {
+	public List<User> findByNameStartsWithIgnoreCase(String name) {
 		List<User> lista = repository.findByNameStartingWithIgnoreCase(name);
 		if(lista.isEmpty()){
 			throw new ObjectNotFound("Nenhum nome de usuário inicia com %s".formatted(name));
 		}
 		return lista;
 	}
-	
-	
 
 }

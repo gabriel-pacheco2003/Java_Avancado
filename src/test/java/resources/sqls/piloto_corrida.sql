@@ -1,0 +1,9 @@
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(1, 1, 1, 1);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(2, 2, 1, 2);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(3, 3, 1, 3);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(4, 1, 2, 1);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(5, 2, 2, 2);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(6, 3, 2, 3);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(7, 1, 3, 1);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(8, 2, 3, 2);
+INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(9, 3, 3, 3);
