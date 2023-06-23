@@ -1,5 +1,7 @@
 package br.com.trier.springvespertino.models;
 
+import br.com.trier.springvespertino.models.dto.RacerRaceDTO;
+import br.com.trier.springvespertino.utils.DateUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +36,12 @@ public class RacerRace {
 	@Column(name = "colocacao")
 	private Integer rank;
 	
+	public RacerRace(RacerRaceDTO dto, Racer racer, Race race) {
+		this(dto.getId(), racer, race, dto.getRank());	
+	}
+	
+	public RacerRaceDTO toDTO() {
+		return new RacerRaceDTO(id, rank, racer.getId(), racer.getName(), race.getId(), DateUtils.dateToString(race.getDate()), race.getSpeedway());
+	}
 
 }

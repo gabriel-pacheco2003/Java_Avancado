@@ -22,7 +22,7 @@ public class RaceServiceImpl implements RaceService {
 
 	private void validateDate(Race race) {
 		if (race.getChampionship() == null){
-			throw new IntegrityViolation("Data inválida"); 
+			throw new IntegrityViolation("Campeonato inválido"); 
 		}
 		if (race.getDate().getYear() != race.getChampionship().getYear()) {
 			throw new IntegrityViolation("Data informada difere do Campeonato");

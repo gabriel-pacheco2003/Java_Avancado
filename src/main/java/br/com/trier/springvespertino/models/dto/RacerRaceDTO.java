@@ -1,5 +1,6 @@
 package br.com.trier.springvespertino.models.dto;
 
+import br.com.trier.springvespertino.models.Speedway;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,11 @@ import lombok.Setter;
 public class RacerRaceDTO {
 	
 	private Integer id;
+	private Integer rank;
 	private Integer racerId;
 	private String racerName;
-	private String raceEquip;
 	private Integer raceId;
 	private String raceDate;
-	private String raceSpeedway;
+	private Speedway raceSpeedway;
 
 }
