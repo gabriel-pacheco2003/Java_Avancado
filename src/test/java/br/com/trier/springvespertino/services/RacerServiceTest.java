@@ -28,7 +28,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar por ID")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findByIdTest() {
 		var racer = racerService.findById(1);
 		assertNotNull(racer);
@@ -40,14 +42,19 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar por ID inexistente")
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void ListByIdNonExistsTest() {
-		var exception = assertThrows(ObjectNotFound.class, () -> racerService.findById(1));
-		assertEquals("Piloto 1 não encontrado", exception.getMessage());
+		var exception = assertThrows(ObjectNotFound.class, () -> racerService.findById(10));
+		assertEquals("Piloto 10 não encontrado", exception.getMessage());
 	}
 
 	@Test
 	@DisplayName("Teste inserir piloto")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void insertRacerTest() {
 		Racer racer = new Racer(1, "insert", countryService.findById(1), equipService.findById(1));
 		racerService.insert(racer);
@@ -59,7 +66,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste listar todos")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void listAllTest() {
 		assertEquals(5, racerService.listAll().size());
 	}
@@ -73,7 +82,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste alterar piloto")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void updatedRacerTest() {
 		assertEquals("Piloto1", racerService.findById(1).getName());
 		Racer racerUpdated = new Racer(1, "update", countryService.findById(1), equipService.findById(1));
@@ -83,7 +94,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste remover piloto")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void removeRacerTest() {
 		racerService.delete(1);
 		assertEquals(4, racerService.listAll().size());
@@ -91,7 +104,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste remover piloto inexistente")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void removeSpeedwayNonExistsTest() {
 		var exception = assertThrows(ObjectNotFound.class, () -> racerService.findById(10));
 		assertEquals("Piloto 10 não encontrado", exception.getMessage());
@@ -99,7 +114,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar por nome")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findByNameTest() {
 		assertEquals(5, racerService.findByNameStartsWithIgnoreCase("pi").size());
 		assertEquals(1, racerService.findByNameStartsWithIgnoreCase("piloto1").size());
@@ -107,7 +124,9 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste buscar por nome inexistente")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findByNameNonExistsTest() {
 		var exception = assertThrows(ObjectNotFound.class,
 				() -> racerService.findByNameStartsWithIgnoreCase("jancskj"));
@@ -116,14 +135,18 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste busca por equipe")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findByEquipTest() {
 		assertEquals(3, racerService.findByEquipOrderByName(equipService.findById(1)).size());
 	}
 
 	@Test
 	@DisplayName("Teste busca por equipe não encontrada")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findByEquipNotFoundTest() {
 		var exception = assertThrows(ObjectNotFound.class,
 				() -> racerService.findByEquipOrderByName(equipService.findById(3)));
@@ -132,14 +155,18 @@ public class RacerServiceTest extends BaseTests {
 
 	@Test
 	@DisplayName("Teste busca piloto por país")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findRacerByCountryTest() {
 		assertEquals(3, racerService.findByCountry(countryService.findById(1)).size());
 	}
 
 	@Test
 	@DisplayName("Teste busca piloto por país não encontrado")
-	@Sql({ "classpath:/resources/sqls/tabelas.sql" })
+	@Sql({ "classpath:/resources/sqls/pais.sql" })
+	@Sql({ "classpath:/resources/sqls/equipe.sql" })
+	@Sql({ "classpath:/resources/sqls/piloto.sql" })
 	void findRacerByCountryNotFoundTest() {
 		var exception = assertThrows(ObjectNotFound.class,
 				() -> racerService.findByCountry(countryService.findById(3)));

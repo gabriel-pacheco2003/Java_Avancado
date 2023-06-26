@@ -40,5 +40,5 @@ INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida,
 INSERT INTO piloto_corrida (id_piloto_corrida, racer_id_piloto, race_id_corrida, colocacao) VALUES(9, 3, 3, 3);
 
 
-INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES(1, 'User 1', 'email1', 'senha1');
-INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES(2, 'User 2', 'email2', 'senha2');
+insert into usuario(id_usuario, nome_usuario, email_usuario, senha_usuario, permissoes_usuario) VALUES(1, 'User 1', 'email1', 'senha1', 'ADMIN,USER');
+INSERT INTO usuario(id_usuario, nome_usuario, email_usuario, senha_usuario, permissoes_usuario) VALUES(2, 'User 2', 'email2', 'senha2', 'USER');

@@ -50,7 +50,7 @@ public class EquipServiceTest extends BaseTests{
 	@DisplayName("Teste listar todos")
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void listAllTest() {
-		assertEquals(2, equipService.listAll().size());
+		assertEquals(3, equipService.listAll().size());
 	}
 	
 	@Test

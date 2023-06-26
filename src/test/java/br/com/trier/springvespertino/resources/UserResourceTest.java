@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.springvespertino.SpringVespertinoApplication;
+import br.com.trier.springvespertino.config.jwt.LoginDTO;
 import br.com.trier.springvespertino.models.dto.UserDTO;
 import br.com.trier.springvespertino.resources.exceptions.StandardError;
 
@@ -45,7 +46,7 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Buscar por id")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void getOkTest() {
 		ResponseEntity<UserDTO> response = getUser("/usuarios/1");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -56,7 +57,7 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Buscar por id inexistente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void getNotFoundTest() {
 		ResponseEntity<UserDTO> response = getUser("/usuarios/100");
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
@@ -66,7 +67,7 @@ public class UserResourceTest {
 	@DisplayName("Cadastrar usuário")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
 	public void insertUserTest() {
-		UserDTO dto = new UserDTO(null, "nome", "email", "senha");
+		UserDTO dto = new UserDTO(null, "nome", "email", "senha", "permissao");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
@@ -84,9 +85,9 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Cadastrar usuario com o email duplicado")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void insertUserWithDuplicatedEmail() {
-		UserDTO dto = new UserDTO(null, "nome", "email2", "senha");
+		UserDTO dto = new UserDTO(null, "nome", "email2", "senha", "permissao");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
@@ -102,9 +103,9 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Alterar usuario")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void udpateUserTest() {
-		UserDTO dto = new UserDTO(1, "update", "update", "update");
+		UserDTO dto = new UserDTO(1, "update", "update", "update", "update");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
@@ -122,9 +123,9 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Alterar usuario com email duplicado")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void udpateUserWithDuplicatedEmailTest() {
-		UserDTO dto = new UserDTO(1, "update", "email2", "update");
+		UserDTO dto = new UserDTO(1, "update", "email2", "update", "update");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
@@ -140,7 +141,7 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Procurar por nome")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void findByNameTest() {
 		ResponseEntity<List<UserDTO>> response = getUsers("/usuarios/name/User 1");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -149,7 +150,7 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Procurar por nome inexistente")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void findByNameNonExistsTest() {
 		ResponseEntity<StandardError> response = rest.getForEntity("/usuarios/name/asdbvsk", StandardError.class);
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
@@ -158,7 +159,7 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Listar todos")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void listAllTest() {
 		ResponseEntity<List<UserDTO>> response = getUsers("/usuarios");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
@@ -176,7 +177,7 @@ public class UserResourceTest {
 	@Test
 	@DisplayName("Remover usuário")
 	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
-	@Sql("classpath:/resources/sqls/usuario.sql")
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
 	public void deleteUserTest() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -206,4 +207,51 @@ public class UserResourceTest {
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.NOT_FOUND);
 	}
 	
+	@Test
+	@DisplayName("Obter Token")
+	@Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
+	@Sql({"classpath:/resources/sqls/usuario.sql"})
+	public void getToken() {
+		LoginDTO loginDTO = new LoginDTO("email1", "senha1");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<LoginDTO> requestEntity = new HttpEntity<>(loginDTO, headers);
+		ResponseEntity<String> responseEntity = rest.exchange(
+				"/auth/token", 
+				HttpMethod.POST,  
+				requestEntity,    
+				String.class   
+				);
+		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+		String token = responseEntity.getBody();
+		System.out.println("****************"+token);
+		headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(token);
+		ResponseEntity<List<UserDTO>> response =  rest.exchange("/users", HttpMethod.GET, new HttpEntity<>(null, headers),new ParameterizedTypeReference<List<UserDTO>>() {});
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
+	}
+	
+	/*
+	 * @Test
+	 * 
+	 * @DisplayName("Obter Token")
+	 * 
+	 * @Sql({"classpath:/resources/sqls/limpa_tabelas.sql"})
+	 * 
+	 * @Sql({"classpath:/resources/sqls/usuario.sql"}) public void getToken() {
+	 * LoginDTO loginDTO = new LoginDTO("email1", "senha1"); HttpHeaders headers =
+	 * new HttpHeaders(); headers.setContentType(MediaType.APPLICATION_JSON);
+	 * HttpEntity<LoginDTO> requestEntity = new HttpEntity<>(loginDTO, headers);
+	 * ResponseEntity<String> responseEntity = rest.exchange( "/auth/token",
+	 * HttpMethod.POST, requestEntity, String.class );
+	 * assertEquals(responseEntity.getStatusCode(), HttpStatus.OK); String token =
+	 * responseEntity.getBody(); System.out.println("****************"+token);
+	 * headers = new HttpHeaders();
+	 * headers.setContentType(MediaType.APPLICATION_JSON);
+	 * headers.setBearerAuth(token); ResponseEntity<List<UserDTO>> response =
+	 * rest.exchange("/users", HttpMethod.GET, null,new
+	 * ParameterizedTypeReference<List<UserDTO>>() {} , headers);
+	 * assertEquals(response.getStatusCode(), HttpStatus.OK); }
+	 */
 }
