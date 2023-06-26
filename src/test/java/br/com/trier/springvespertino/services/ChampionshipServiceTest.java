@@ -1,10 +1,7 @@
 package br.com.trier.springvespertino.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +25,6 @@ public class ChampionshipServiceTest extends BaseTests {
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void findByIdTest() {
 		var campeonato = champService.findById(1);
-		assertNotNull(campeonato);
 		assertEquals(1, campeonato.getId());
 		assertEquals("Camp1", campeonato.getDescription());
 	}
@@ -52,15 +48,14 @@ public class ChampionshipServiceTest extends BaseTests {
 	}
 
 	@Test
-	@DisplayName("Teste listar todos os campeonatos")
+	@DisplayName("Teste listar todos")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void listAllTest() {
-		List<Championship> lista = champService.listAll();
-		assertEquals(3, lista.size());
+		assertEquals(3, champService.listAll().size());
 	}
 
 	@Test
-	@DisplayName("Teste listar todos sem possuir campeonatos cadastrados")
+	@DisplayName("Teste listar todos sem cadastros existentes")
 	void listAllNonExistsTest() {
 		var exception = assertThrows(ObjectNotFound.class, () -> champService.listAll());
 		assertEquals("Nenhum campeonato cadastrado", exception.getMessage());
@@ -70,20 +65,17 @@ public class ChampionshipServiceTest extends BaseTests {
 	@DisplayName("Teste alterar campeonato")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void updateChampionshipTest() {
-		var campeonato = champService.findById(1);
-		assertEquals("Camp1", campeonato.getDescription());
+		assertEquals("Camp1", champService.findById(1).getDescription());
 		Championship campeonatoUpdate = new Championship(1, "update", 2000);
 		champService.update(campeonatoUpdate);
-		campeonato = champService.findById(1);
-		assertEquals("update", campeonato.getDescription());
+		assertEquals("update", champService.findById(1).getDescription());
 	}
 
 	@Test
 	@DisplayName("Teste alterar campeonato com o ano inválido")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void updateChampionshipInvalidYearTest() {
-		var champ = champService.findById(1);
-		assertEquals("Camp1", champ.getDescription());
+		assertEquals("Camp1", champService.findById(1).getDescription());
 		Championship champUpdate = new Championship(1, "update", 2025);
 		var exception = assertThrows(IntegrityViolation.class, () -> champService.update(champUpdate));
 		assertEquals("Ano inválido", exception.getMessage());
@@ -94,8 +86,7 @@ public class ChampionshipServiceTest extends BaseTests {
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void deleteChampionshipTest() {
 		champService.delete(1);
-		List<Championship> lista = champService.listAll();
-		assertEquals(2, lista.size());
+		assertEquals(2, champService.listAll().size());
 	}
 
 	@Test
@@ -109,9 +100,7 @@ public class ChampionshipServiceTest extends BaseTests {
 	@DisplayName("Teste busca por descrição")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void findByDescriptionTest() {
-		var campeonato = champService.findByDescriptionIgnoreCase("Camp1");
-		assertNotNull(campeonato);
-		assertEquals("Camp1", campeonato.get(0).getDescription());
+		assertEquals("Camp1", champService.findByDescriptionIgnoreCase("Camp1").get(0).getDescription());
 	}
 
 	@Test
@@ -126,9 +115,7 @@ public class ChampionshipServiceTest extends BaseTests {
 	@DisplayName("Teste busca por ano")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void findByYearBetweenTest() {
-		List<Championship> lista = champService.findByYearBetweenOrderByYearAsc(2005, 2020);
-		assertNotNull(lista);
-		assertEquals(2, lista.size());
+		assertEquals(2, champService.findByYearBetweenOrderByYearAsc(2005, 2020).size());
 	}
 
 	@Test

@@ -1,10 +1,7 @@
 package br.com.trier.springvespertino.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +25,6 @@ public class EquipServiceTest extends BaseTests{
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void findByIdTest() {
 		var equipe = equipService.findById(1);
-		assertNotNull(equipe);
 		assertEquals(1, equipe.getId());
 		assertEquals("Redbull", equipe.getName());
 	}
@@ -51,15 +47,14 @@ public class EquipServiceTest extends BaseTests{
 	}
 	
 	@Test
-	@DisplayName("Teste listar todas as equipes")
+	@DisplayName("Teste listar todos")
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void listAllTest() {
-		List<Equip> lista = equipService.listAll();
-		assertEquals(2, lista.size());
+		assertEquals(2, equipService.listAll().size());
 	}
 	
 	@Test
-	@DisplayName("Teste listar todos sem equipes cadastradas")
+	@DisplayName("Teste listar todos sem cadastros existentes")
 	void listAllNonExistsTest() {
 		var exception = assertThrows(ObjectNotFound.class, () -> equipService.listAll());
 		assertEquals("Nenhuma equipe cadastrada", exception.getMessage());
@@ -69,20 +64,17 @@ public class EquipServiceTest extends BaseTests{
 	@DisplayName("Teste alterar equipe")
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void updateEquipTest() {
-		var equip = equipService.findById(1);
-		assertEquals("Redbull", equip.getName());
+		assertEquals("Redbull", equipService.findById(1).getName());
 		Equip equipUpdate = new Equip(1, "update");
 		equipService.update(equipUpdate);
-		equip = equipService.findById(1);
-		assertEquals("update", equip.getName());
+		assertEquals("update", equipService.findById(1).getName());
 	}
 	
 	@Test
 	@DisplayName("Teste alterar equipe já existente")
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void updateEquipExistsTest() {
-		var equip = equipService.findById(1);
-		assertEquals("Redbull", equip.getName());
+		assertEquals("Redbull", equipService.findById(1).getName());
 		Equip equipUpdate = new Equip(1, "Ferrari");
 		var exception = assertThrows(IntegrityViolation.class, () -> equipService.update(equipUpdate));
 		assertEquals("Equipe já existente", exception.getMessage());
@@ -93,8 +85,7 @@ public class EquipServiceTest extends BaseTests{
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void deleteEquipTest() {
 		equipService.delete(1);
-		List<Equip> lista = equipService.listAll();
-		assertEquals(1, lista.size());
+		assertEquals(2, equipService.listAll().size());
 	}
 	
 	@Test
@@ -109,16 +100,14 @@ public class EquipServiceTest extends BaseTests{
 	@DisplayName("Teste busca por nome")
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void findByNameTest() {
-		var equipe = equipService.findByName("Ferrari");
-		assertNotNull(equipe);
-		assertEquals("Ferrari", equipe.get(0).getName());
+		assertEquals("Ferrari", equipService.findByName("Ferrari").get(0).getName());
 	}
 	
 	@Test
 	@DisplayName("Teste busca por nome inexistente")
 	@Sql("classpath:/resources/sqls/equipe.sql")
 	void findByNameNonExistsTest() {
-		var exception = assertThrows(ObjectNotFound.class, () -> equipService.findByName("abc"));
-		assertEquals("Nenhuma equipe foi encontrada com o nome abc", exception.getMessage());
+		var exception = assertThrows(ObjectNotFound.class, () -> equipService.findByName("nasljkfn"));
+		assertEquals("Nenhuma equipe foi encontrada com o nome nasljkfn", exception.getMessage());
 	}
 }

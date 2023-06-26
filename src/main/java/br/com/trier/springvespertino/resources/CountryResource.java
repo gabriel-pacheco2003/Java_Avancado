@@ -18,7 +18,7 @@ import br.com.trier.springvespertino.models.dto.CountryDTO;
 import br.com.trier.springvespertino.services.CountryService;
 
 @RestController
-@RequestMapping("/paises")
+@RequestMapping("/contries")
 public class CountryResource {
 
 	@Autowired
