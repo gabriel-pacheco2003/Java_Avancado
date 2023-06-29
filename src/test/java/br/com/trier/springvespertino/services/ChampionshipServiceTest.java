@@ -24,9 +24,9 @@ public class ChampionshipServiceTest extends BaseTests {
 	@DisplayName("Teste busca por ID")
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void findByIdTest() {
-		var campeonato = champService.findById(1);
-		assertEquals(1, campeonato.getId());
-		assertEquals("Camp1", campeonato.getDescription());
+		var championship = champService.findById(1);
+		assertEquals(1, championship.getId());
+		assertEquals("Camp1", championship.getDescription());
 	}
 
 	@Test
@@ -40,11 +40,11 @@ public class ChampionshipServiceTest extends BaseTests {
 	@Test
 	@DisplayName("Teste inserir campeonato")
 	void insertChampionshipTest() {
-		Championship campeonato = new Championship(null, "insert", 2000);
-		champService.insert(campeonato);
-		assertEquals(1, campeonato.getId());
-		assertEquals("insert", campeonato.getDescription());
-		assertEquals(2000, campeonato.getYear());
+		Championship championship = new Championship(null, "insert", 2000);
+		champService.insert(championship);
+		assertEquals(1, championship.getId());
+		assertEquals("insert", championship.getDescription());
+		assertEquals(2000, championship.getYear());
 	}
 
 	@Test
@@ -66,8 +66,8 @@ public class ChampionshipServiceTest extends BaseTests {
 	@Sql("classpath:/resources/sqls/campeonato.sql")
 	void updateChampionshipTest() {
 		assertEquals("Camp1", champService.findById(1).getDescription());
-		Championship campeonatoUpdate = new Championship(1, "update", 2000);
-		champService.update(campeonatoUpdate);
+		Championship championshipUpdate = new Championship(1, "update", 2000);
+		champService.update(championshipUpdate);
 		assertEquals("update", champService.findById(1).getDescription());
 	}
 
