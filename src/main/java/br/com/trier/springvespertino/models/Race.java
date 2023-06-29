@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode (of = "id")
+@EqualsAndHashCode(of = "id")
 @Entity(name = "corrida")
 public class Race {
 
@@ -28,22 +28,23 @@ public class Race {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_corrida")
 	private Integer id;
-	
+
 	@Column(name = "data_corrida")
 	private ZonedDateTime date;
-	 
+
 	@ManyToOne
 	private Speedway speedway;
-	
+
 	@ManyToOne
 	private Championship championship;
-	
+
 	public Race(RaceDTO dto, Speedway speedway, Championship championship) {
-	this(dto.getId(), DateUtils.stringToDate(dto.getDate()), speedway, championship);
+		this(dto.getId(), DateUtils.stringToDate(dto.getDate()), speedway, championship);
 	}
-	
+
 	public RaceDTO toDTO() {
-		return new RaceDTO(id, DateUtils.dateToString(date), speedway.getId(), speedway.getName(), championship.getId(), championship.getDescription());
+		return new RaceDTO(id, DateUtils.dateToString(date), speedway.getId(), speedway.getName(), championship.getId(),
+				championship.getDescription());
 	}
-	
+
 }
