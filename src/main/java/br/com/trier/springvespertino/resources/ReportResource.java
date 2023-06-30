@@ -55,7 +55,6 @@ public class ReportResource {
 		        .map(Race::toDTO)
 		        .toList();
 		
-				
 		return ResponseEntity.ok(new RaceCountryYearDTO(year, country.getName(), raceDTOs.size(), raceDTOs));
 	}
 	
